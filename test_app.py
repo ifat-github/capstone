@@ -15,7 +15,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client
-        self.database_path = os.environ['DATABASE_URL'].replace('casting_agency', 'casting_agency_test')
+        self.database_path = os.environ['DB_URL'].replace('casting_agency', 'casting_agency_test')
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():

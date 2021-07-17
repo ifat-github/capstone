@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 
 
-database_path = os.environ['DATABASE_URL'].replace('casting_agency', 'casting_agency_test')
+database_path = os.environ['DB_URL']
 # database_path = "postgresql://postgres:newPassword@localhost:5432/casting_agency"
     # postgres://maaxthjiznvpin:bec225151e8e7df0c6e924a01dd2dc518311dde3cd60ce2d82cf2e2bdf7eae22@ec2-52-6-77-239.compute-1.amazonaws.com:5432/dba0ibu2fnacio
 
