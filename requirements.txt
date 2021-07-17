@@ -84,7 +84,6 @@ SecretStorage==2.3.1
 setproctitle==1.1.10
 simplejson==3.13.2
 six==1.15.0
-sos==4.1
 SQLAlchemy==1.4.20
 system-service==0.3
 systemd-python==234
