@@ -48,7 +48,6 @@ packaging==21.0
 pexpect==4.2.1
 Pillow==5.1.0
 pluggy==0.13.1
-progressbar==2.3
 protobuf==3.0.0
 psutil==5.4.2
 psycopg2==2.8.6
