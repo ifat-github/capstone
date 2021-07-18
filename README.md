@@ -1,7 +1,14 @@
 # Capstone Project - Casting Agency
 
+This project is the final project of the Udacity Fullstack Nano-Degree.
+The capabilities I've learned through the course are presented in this project, among them are:
+Coding in Python 3, Relational Database Architecture, Modeling Data Objects with SQLAlchemy, Authentication with Auth0, Role-Based Access Control (RBAC), Testing Flask Applications, Deploying Applications and more.
+
+The subject I chose for this project is a Casting Agency.
+The Casting Agency is responsible for creating movies and managing and assigning actors to those movies. I've built a system to simplify and streamline the process of the employees in the agency.
+
 The URL the application is hosted in is: 
-https://ifat--casting-agency-heroku.herokuapp.com/ | https://git.heroku.com/ifat--casting-agency-heroku.git
+https://ifats-casting-agency.herokuapp.com
 
 
 ### Installing Dependencies
@@ -50,6 +57,7 @@ flask run --reload
 
 The `--reload` flag will detect file changes and restart the server automatically.
 
+
 ## Endpoints
 
 GET '/actors'
@@ -66,17 +74,21 @@ DELETE '/actors/${id}'
 POST '/actors'
 - Sends a post request in order to add an actor
 - Request Body: 
-{'name': '',
-'age': '',
-'gender': ''}
+{
+	'name': '',
+	'age': '',
+	'gender': ''
+}
 - Returns: all of the actors in the API
 
 PATCH '/actors/${id}'
 - Sends a patch request in order to edit a specific actor details
 - Request Body: 
-{'name': '',
-'age': '',
-'gender': ''}
+{
+	'name': '',
+	'age': '',
+	'gender': ''
+}
 - Returns: all of the actors in the API
 
 DELETE '/movies/${id}'
@@ -88,15 +100,19 @@ DELETE '/movies/${id}'
 POST '/movies'
 - Sends a post request in order to add a movie
 - Request Body: 
-{'title': '',
-'release_date': ''}
+{
+	'title': '',
+	'release_date': ''
+}
 - Returns: all of the movies in the API
 
 PATCH '/movies/${id}'
 - Sends a patch request in order to edit a specific movie details
 - Request Body: 
-{'title': '',
-'release_date': ''}
+{
+	'title': '',
+	'release_date': ''
+}
 - Returns: all of the movies in the API
 
 
@@ -147,3 +163,56 @@ fsnd-ifat.eu.auth0.com/authorize?audience=casting_agency&response_type=token&cli
 
 - Update the tokens you get for each user in the setup.sh file in the base dir.
 - Export in the terminal inside the virtuel enviroment, all of the tokens. (example: export EXECUTIVE_PRODUCER_TOKEN="eyJhbGci....")
+
+## Deploy to Heroku
+
+1. Create an account with Heroku
+2. Download the Heroku CLI using: 
+	brew tap heroku/brew && brew install heroku
+3. Run Heroku, using:
+	heroku login
+4. Save your package requirements, using:
+	pip freeze > requirements.txt
+5. Create a bash file, using:
+	touch setup.sh
+and set up all of your environment variables in that file
+6. Gunicorn is a pure-Python HTTP server for WSGI applications. We'll be deploying our applications using the Gunicorn webserver.
+Install gunicorn using:
+	pip install gunicorn
+	touch Procfile
+
+In the procfile created, write:
+	web: gunicorn app:app
+7. Heroku can run all your migrations to the database you have hosted on the platform. For that, we need to create a manage.py file and insert into it:
+	from flask_script import Manager
+	from flask_migrate import Migrate, MigrateCommand
+
+	from app import app
+	from models import db
+
+	migrate = Migrate(app, db)
+	manager = Manager(app)
+
+	manager.add_command('db', MigrateCommand)
+
+
+	if __name__ == '__main__':
+	    manager.run()
+8. Now we can run our local migrations using:
+	python manage.py db init
+	python manage.py db migrate
+	python manage.py db upgrade
+9. Create Heroku app run, using:
+	heroku create name_of_your_app
+10. Using the git url obtained from the last step, in terminal run:
+	git remote add heroku heroku_git_url
+11. Run this code in order to create your database and connect it to your application: 		heroku addons:create heroku-postgresql:hobby-dev --app name_of_your_application
+12. Run:
+	heroku config --app name_of_your_application 
+in order to check your configuration variables in Heroku.
+13. Run:
+	git push heroku master
+14. Run migrations by running: 
+	heroku run python manage.py db upgrade --app name_of_your_application
+
+Now you have a live application!
