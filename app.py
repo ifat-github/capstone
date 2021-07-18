@@ -8,8 +8,12 @@ from auth.auth import requires_auth, AuthError
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    # CORS(app)
     setup_db(app)
+
+    @app.route('/', methods=['GET'])
+    def index():
+        return jsonify(
+            {'message': 'Welcome to the Casting Agency Managment System'})
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
@@ -26,9 +30,9 @@ def create_app(test_config=None):
     @requires_auth('post:actors')
     def add_actor(self):
         body = request.get_json()
-        name = body.get('name', None)
-        age = body.get('age', None)
-        gender = body.get('gender', None)
+        name = body.get('name')
+        age = body.get('age')
+        gender = body.get('gender')
 
         actors = [actor.format() for actor in Actor.query.all()]
 
@@ -80,9 +84,9 @@ def create_app(test_config=None):
                 abort(404)
 
             body = request.get_json()
-            new_name = body.get('name', None)
-            new_age = body.get('age', None)
-            new_gender = body.get('gender', None)
+            new_name = body.get('name')
+            new_age = body.get('age')
+            new_gender = body.get('gender')
 
             if not new_name or not new_age or not new_gender:
                 abort(422)
@@ -118,8 +122,8 @@ def create_app(test_config=None):
     @requires_auth('post:movies')
     def add_movie(self):
         body = request.get_json()
-        title = body.get('title', None)
-        release_date = body.get('release_date', None)
+        title = body.get('title')
+        release_date = body.get('release_date')
 
         if not title or not release_date:
             abort(422)
@@ -167,8 +171,8 @@ def create_app(test_config=None):
                 abort(404)
 
             body = request.get_json()
-            new_title = body.get('title', None)
-            new_release_date = body.get('release_date', None)
+            new_title = body.get('title')
+            new_release_date = body.get('release_date')
 
             if not new_title or not new_release_date:
                 abort(422)

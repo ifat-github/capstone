@@ -19,14 +19,19 @@ Follow instructions to install the latest version of python for your platform in
 
 #### Virtual Environment
 
-We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. 
+Run:
+	virtualenv venv
+Activate the virtual env using:
+	source venv/bin/activate
+
 
 #### PIP Dependencies
 
 Once you have your virtual environment setup and running, install dependencies by naviging to the `/flaskr` directory and running:
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 This will install all of the required packages we selected within the `requirements.txt` file.
@@ -148,7 +153,7 @@ To run the tests, run
 dropdb casting_agency_test
 createdb casting_agency_test
 psql casting_agency_test < casting_agency_test.psql
-python test_flaskr.py
+python3 test_flaskr.py
 ```
 
 ### Authentication Setup
