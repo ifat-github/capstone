@@ -10,19 +10,20 @@ casting_assistant_token = os.environ.get('CASTING_ASSISTANT_TOKEN')
 casting_director_token = os.environ.get('CASTING_DIRECTOR_TOKEN')
 executive_producer_token = os.environ.get('EXECUTIVE_PRODUCER_TOKEN')
 
+
 class CastingAgencyTestCase(unittest.TestCase):
 
     def setUp(self):
         self.app = create_app()
         self.client = self.app.test_client
-        self.database_path = os.environ['DB_URL'].replace('casting_agency', 'casting_agency_test')
+        self.database_path = os.environ['DB_URL'].replace(
+            'casting_agency', 'casting_agency_test')
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():
             self.db = SQLAlchemy()
             self.db.init_app(self.app)
             self.db.create_all()
-
 
     def tearDown(self):
         """Executed after reach test"""
@@ -31,9 +32,9 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_get_actors(self):
         res = self.client().get(
             '/actors',
-            headers = {
-                    "Authorization": "Bearer {}".format(executive_producer_token)
-                })
+            headers={
+                "Authorization": "Bearer {}".format(executive_producer_token)
+            })
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -44,10 +45,10 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_add_actor(self):
         res = self.client().post(
             '/actors',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'name': 'Ellen',
                 'age': '25',
                 'gender': 'female'})
@@ -59,7 +60,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_delete_actor(self):
         res = self.client().delete(
             '/actors/2',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -67,14 +68,14 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['deleted'])
-    
+
     def test_edit_actor(self):
         res = self.client().patch(
             '/actors/3',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'name': 'Michael',
                 'age': '31',
                 'gender': 'male'})
@@ -86,7 +87,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_get_movies(self):
         res = self.client().get(
             '/movies',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -99,10 +100,10 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_add_movie(self):
         res = self.client().post(
             '/movies',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'title': 'Moana',
                 'release_date': '1.5.19'})
         data = json.loads(res.data)
@@ -110,7 +111,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_delete_movie(self):
         res = self.client().delete(
             '/movies/3',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -122,13 +123,13 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_edit_movie(self):
         res = self.client().patch(
             '/movies/5',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'title': 'Soul3',
                 'release_date': '26.6.2025'
-                })
+            })
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -137,7 +138,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_422_if_delete_invalid_actor(self):
         res = self.client().delete(
             '/actors/1000',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -149,7 +150,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_422_if_delete_invalid_movie(self):
         res = self.client().delete(
             '/movies/1000',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -157,11 +158,11 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'], 'unprocessable')
-    
+
     def test_422_if_edit_invalid_actor(self):
         res = self.client().patch(
             '/actors/1000',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -173,7 +174,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_422_if_edit_invalid_movie(self):
         res = self.client().patch(
             '/movies/1000',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
@@ -181,14 +182,14 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'], 'unprocessable')
-    
+
     def test_422_if_add_actor_missing_details(self):
         res = self.client().post(
             '/actors',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'name': 'Goldi',
                 'gender': 'female'})
         data = json.loads(res.data)
@@ -200,10 +201,10 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_422_if_add_movie_missing_details(self):
         res = self.client().post(
             '/movies',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'title': 'Zootopia'})
         data = json.loads(res.data)
 
@@ -214,7 +215,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_casting_assistant_get_actors_should_succeed(self):
         res = self.client().get(
             '/actors',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(casting_assistant_token)
             })
         data = json.loads(res.data)
@@ -225,7 +226,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_casting_assistant_delete_movie_should_fail(self):
         res = self.client().delete(
             '/movies/1',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(casting_assistant_token)
             })
         data = json.loads(res.data)
@@ -237,10 +238,10 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_casting_director_add_actor_should_succeed(self):
         res = self.client().post(
             '/actors',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(casting_director_token)
             },
-            json = {
+            json={
                 'name': 'Guy',
                 'age': '45',
                 'gender': 'male'
@@ -253,7 +254,7 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_casting_director_delete_movie_should_fail(self):
         res = self.client().delete(
             '/movies/1',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(casting_director_token)
             })
         data = json.loads(res.data)
@@ -265,10 +266,10 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_executive_producer_add_actor_should_succeed(self):
         res = self.client().post(
             '/actors',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             },
-            json = {
+            json={
                 'name': 'Rachel',
                 'age': '30',
                 'gender': 'female'
@@ -281,14 +282,13 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_executive_producer_delete_movie_should_succeed(self):
         res = self.client().delete(
             '/movies/1',
-            headers = {
+            headers={
                 "Authorization": "Bearer {}".format(executive_producer_token)
             })
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-   
 
 
 if __name__ == "__main__":

@@ -5,11 +5,11 @@ from flask_cors import CORS
 from models import setup_db, Actor, Movie
 from auth.auth import requires_auth, AuthError
 
+
 def create_app(test_config=None):
     app = Flask(__name__)
     # CORS(app)
     setup_db(app)
-
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
@@ -46,10 +46,9 @@ def create_app(test_config=None):
             abort(422)
 
         return jsonify({
-                'success': True,
-                'actors': actors
-            }), 200
-
+            'success': True,
+            'actors': actors
+        }), 200
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
@@ -104,7 +103,6 @@ def create_app(test_config=None):
 
         return jsonify(result)
 
-
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:actors')
     def get_movies(self):
@@ -139,7 +137,6 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
-
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
     @requires_auth('delete:movies')
     def delete_movie(self, movie_id):
@@ -159,7 +156,6 @@ def create_app(test_config=None):
 
         except BaseException:
             abort(422)
-
 
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
     @requires_auth('patch:movies')
@@ -192,7 +188,6 @@ def create_app(test_config=None):
 
         return jsonify(result)
 
-
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
@@ -201,7 +196,6 @@ def create_app(test_config=None):
             'message': 'unprocessable'
         }), 422
 
-
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
@@ -209,7 +203,6 @@ def create_app(test_config=None):
             'error': 404,
             'message': 'resource not found'
         }), 404
-
 
     @app.errorhandler(400)
     def auth_error(error):
@@ -230,11 +223,11 @@ def create_app(test_config=None):
     @app.errorhandler(AuthError)
     def unauthorized(error):
         return jsonify({
-        'success': False,
-        'error': 403,
-        'message': 'unauthorized'
+            'success': False,
+            'error': 403,
+            'message': 'unauthorized'
         }), 403
-    
+
     return app
 
 

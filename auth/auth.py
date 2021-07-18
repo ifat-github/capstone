@@ -9,48 +9,51 @@ AUTH0_DOMAIN = 'fsnd-ifat.eu.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'casting_agency'
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-## Auth Header
+# Auth Header
 
 def get_token_auth_header():
     try:
         auth = request.headers.get('Authorization', None)
-        if not auth: 
+        if not auth:
             raise AuthError({
-                'code': 'authorization_header_missing', 
-                'description': 'Authorization header is expected.' 
+                'code': 'authorization_header_missing',
+                'description': 'Authorization header is expected.'
             }, 401)
         header_parts = auth.split(' ')
         if len(header_parts) != 2:
             raise AuthError({
-                'code': 'authorization_header_missing', 
-                'description': 'Authorization header is malformed.' 
+                'code': 'authorization_header_missing',
+                'description': 'Authorization header is malformed.'
             }, 401)
         elif header_parts[0].lower() != 'bearer':
             raise AuthError({
-                'code': 'authorization_header_missing', 
-                'description': 'Authorization header is malformed.' 
+                'code': 'authorization_header_missing',
+                'description': 'Authorization header is malformed.'
             }, 401)
         return header_parts[1]
-    except: 
+    except BaseException:
         raise Exception('Not Implemented')
+
 
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
-                        raise AuthError({
-                            'code': 'invalid_claims',
-                            'description': 'Permissions not included in JWT.'
-                        }, 400)
+        raise AuthError({
+            'code': 'invalid_claims',
+            'description': 'Permissions not included in JWT.'
+        }, 400)
 
     if permission not in payload['permissions']:
         raise AuthError({
@@ -59,8 +62,9 @@ def check_permissions(permission, payload):
         }, 403)
     return True
 
+
 def verify_decode_jwt(token):
-    jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
+    jsonurl = urlopen("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
     rsa_key = {}
@@ -101,13 +105,14 @@ def verify_decode_jwt(token):
         except Exception:
             raise AuthError({
                 'code': 'invalid_header',
-                'description': 'Unable to parse authentication token.'            
+                'description': 'Unable to parse authentication token.'
             }, 400)
 
     raise AuthError({
-                'code': 'invalid_header',
+        'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 400)
+    }, 400)
+
 
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
